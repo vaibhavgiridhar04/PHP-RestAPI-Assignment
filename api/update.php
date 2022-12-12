@@ -4,26 +4,29 @@
     header("Access-Control-Allow-Methods: POST");
     header("Access-Control-Max-Age: 3600");
     header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-
+    
     include_once '../config/database.php';
     include_once '../class/employees.php';
-
+    
     $database = new Database();
     $db = $database->getConnection();
-
+    
     $item = new Employee($db);
-
+    
     $data = json_decode(file_get_contents("php://input"));
-
+    
+    $item->id = $data->id;
+    
+    // employee values
     $item->name = $data->name;
     $item->email = $data->email;
     $item->age = $data->age;
     $item->designation = $data->designation;
     $item->created = date('Y-m-d H:i:s');
     
-    if($item->createEmployee()){
-        echo 'Employee created successfully.';
+    if($item->updateEmployee()){
+        echo json_encode("Employee data updated.");
     } else{
-        echo 'Employee could not be created.';
+        echo json_encode("Data could not be updated");
     }
 ?>
